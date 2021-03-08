@@ -6,64 +6,94 @@
 #include <map>
 #include <functional>
 #include <fstream>
-#include "json.hpp"
-
-// for convenience
-using json = nlohmann::json;
+#include <istream> // for getline
+#include "cryptopp840/cryptlib.h"
+#include "cryptopp840/sha.h"
+#include "cryptopp840/hex.h"
+#include "cryptopp/files.h"  
 
 typedef struct  {
     std::string username;
     std::string password;
 } credentials;
 credentials credentials_dict[2];
+std::map<std::string, std::string> dict_creds;
 
 bool valid_credentials(std::string username,std::string password)
 {
     bool is_valid = false;
 
-
-    for ( int i = 0; i < 2; ++i)
-    {
-        if ( username == credentials_dict[i].username && password == credentials_dict[i].password)
-        {
+    for (const auto [key, value] : dict_creds) {
+        if ((password == value)) {
             is_valid = true;
         }
     }
+
     return is_valid;
 }
 
-void hash_credentials(credentials *user)
+std::string hash_credentials(std::string username, std::string password)
 {
-    std::size_t h1 = std::hash<std::string>{}(user->username);
-    std::size_t h2 = std::hash<std::string>{}(user->password);
-    user->password = h1 ^ (h2 << 1);
-    return; 
+    CryptoPP::SHA256 hash;
+    CryptoPP::byte digest[ CryptoPP::SHA256::DIGESTSIZE ];
+    std::string msg = password;
+
+    hash.CalculateDigest( digest, (CryptoPP::byte*) msg.c_str(), msg.length() );
+
+    CryptoPP::HexEncoder encoder;
+    std::string output;
+    encoder.Attach( new CryptoPP::StringSink( output ) );
+    encoder.Put( digest, sizeof(digest) );
+    encoder.MessageEnd();
+
+    std::cout << output << std::endl; 
+
+    return output; 
+}
+
+void print_credentials(const std::map<std::string, std::string>& dict_creds)
+{
+    for (const auto& [key, value] : dict_creds) {
+        std::cout << key << " = " << value << "\n";
+    }
 }
 
 void load_credentials()
 {
-    std::cout << "Loading json\n";
-    std::ifstream input;    
-    std::ifstream file_handle("config.json");
+    std::cout << "Loading config\n";
+
+    std::ifstream file_handle("config.txt");
     if ( !file_handle.is_open() )
     {
         std::cout << "Error: Couldn't open file\n";
         return;
     }
     
-    std::string line;
-    
-    while (std::getline(file_handle, line))
-    {
-        char start = line[0];
-        if ( start == '{' )
-        {
-            std::cout << "Looks like json\n\n";
-        }
-    }
-    return;
+    std::string word;
+    int i = 0;
+    std::string creds[2];
 
+    while (std::getline(file_handle, word, ','))
+    {
+        if ( i == 0 )
+        {
+            creds[0] = word;
+            i++;
+        }
+        else if ( i == 1) 
+        {
+            creds[1] = word;
+            i = 0;
+            std::string key = std::string(creds[0]);
+            dict_creds[creds[0]] = creds[1];
+        }
+        
+    }
+    print_credentials(dict_creds);
+    return;
 }
+
+
 
 int main(){
     /* Read in stored credentials */ 
@@ -79,10 +109,9 @@ int main(){
     std::cout << "enter password: \n";
     std::cin >> password;
 
-    credentials login = {username, password};
-    hash_credentials(&login);
+    std::string hashed = hash_credentials(username, password);
 
-    if ( valid_credentials(login.username, login.password) )
+    if ( valid_credentials(password, hashed) )
     {
         std::cout << "You're in\n\n";
     }
