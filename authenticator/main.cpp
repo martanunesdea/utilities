@@ -6,6 +6,7 @@
 #include <map>
 #include <functional>
 #include <fstream>
+#include <sstream>
 #include <istream> // for getline
 #include "cryptopp840/cryptlib.h"
 #include "cryptopp840/sha.h"
@@ -16,23 +17,22 @@ typedef struct  {
     std::string username;
     std::string password;
 } credentials;
-credentials credentials_dict[2];
+
 std::map<std::string, std::string> dict_creds;
 
 bool valid_credentials(std::string username,std::string password)
 {
     bool is_valid = false;
-
     for (const auto [key, value] : dict_creds) {
-        if ((password == value)) {
+        if (value == password && key == username) {
             is_valid = true;
         }
     }
-
+    std::cout << std::endl;
     return is_valid;
 }
 
-std::string hash_credentials(std::string username, std::string password)
+std::string hash_credentials(std::string password)
 {
     CryptoPP::SHA256 hash;
     CryptoPP::byte digest[ CryptoPP::SHA256::DIGESTSIZE ];
@@ -46,19 +46,19 @@ std::string hash_credentials(std::string username, std::string password)
     encoder.Put( digest, sizeof(digest) );
     encoder.MessageEnd();
 
-    std::cout << output << std::endl; 
+    // std::cout << "hashed password: " << output << std::endl; 
 
     return output; 
 }
 
-void print_credentials(const std::map<std::string, std::string>& dict_creds)
+void print_credentials_file(const std::map<std::string, std::string> dict_creds)
 {
-    for (const auto& [key, value] : dict_creds) {
+    for (const auto [key, value] : dict_creds) {
         std::cout << key << " = " << value << "\n";
     }
 }
 
-void load_credentials()
+void load_credentials_file()
 {
     std::cout << "Loading config\n";
 
@@ -69,51 +69,55 @@ void load_credentials()
         return;
     }
     
+    std::string aline;
     std::string word;
-    int i = 0;
-    std::string creds[2];
+    credentials temp;
+    bool first_word;
 
-    while (std::getline(file_handle, word, ','))
+    while (std::getline(file_handle, aline))
     {
-        if ( i == 0 )
+        std::istringstream line(aline);
+        first_word = true;
+        while (std::getline(line, word, ','))
         {
-            creds[0] = word;
-            i++;
+            if ( first_word )
+            {  
+                temp.username = word;
+                first_word = false;
+            }
+            else 
+            {
+                temp.password = word;
+            }
         }
-        else if ( i == 1) 
-        {
-            creds[1] = word;
-            i = 0;
-            std::string key = std::string(creds[0]);
-            dict_creds[creds[0]] = creds[1];
-        }
+        dict_creds[temp.username] = temp.password;
         
     }
-    print_credentials(dict_creds);
+
     return;
 }
-
-
 
 int main(){
     /* Read in stored credentials */ 
     load_credentials();
 
-    
+
+    /* Ask user for credentials */
     std::string password;
     std::string username;
 
-    std::cout << "enter username: \n";
+    std::cout << "\nEnter username: ";
     std::cin >> username;
 
-    std::cout << "enter password: \n";
+    std::cout << "\nEnter password: \n";
     std::cin >> password;
 
-    std::string hashed = hash_credentials(username, password);
+    /* Get hash of password and validate with stored credentials */
+    std::string hash = hash_credentials(password);
 
-    if ( valid_credentials(password, hashed) )
-    {
+    if (valid_credentials(username, hash)) 
         std::cout << "You're in\n\n";
-    }
+    else 
+        std::cout << "Sorry, no\n\n";
 
 }
