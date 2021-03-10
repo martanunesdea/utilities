@@ -99,7 +99,7 @@ int main() {
     double salary;
     double pension_contribution;
 
-    std::cout << "Enter your annual salary: \n";
+    std::cout << "Enter annual salary: \n";
     do {
         std::cin >> salary;
         if ( salary == 0 )
