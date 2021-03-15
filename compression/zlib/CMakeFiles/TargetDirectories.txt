@@ -1,0 +1,11 @@
+/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/CMakeFiles/rebuild_cache.dir
+/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/CMakeFiles/edit_cache.dir
+/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/CMakeFiles/zlibstatic.dir
+/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/CMakeFiles/example.dir
+/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/CMakeFiles/list_install_components.dir
+/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/CMakeFiles/minigzip.dir
+/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/CMakeFiles/install/local.dir
+/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/CMakeFiles/test.dir
+/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/CMakeFiles/install/strip.dir
+/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/CMakeFiles/install.dir
+/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/CMakeFiles/zlib.dir

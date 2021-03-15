@@ -1,0 +1,26 @@
+Start testing: Mar 15 08:33 GMT
+----------------------------------------------------------
+1/1 Testing: example
+1/1 Test: example
+Command: "/Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib/example"
+Directory: /Users/martanunesdeabreu/repositories/tricks-and-hacks/compression/zlib
+"example" start time: Mar 15 08:33 GMT
+Output:
+----------------------------------------------------------
+zlib version 1.2.11 = 0x12b0, compile flags = 0xa9
+uncompress(): hello, hello!
+gzread(): hello, hello!
+gzgets() after gzseek:  hello!
+inflate(): hello, hello!
+large_inflate(): OK
+after inflateSync(): hello, hello!
+inflate with dictionary: hello, hello!
+<end of output>
+Test time =   0.37 sec
+----------------------------------------------------------
+Test Passed.
+"example" end time: Mar 15 08:33 GMT
+"example" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Mar 15 08:33 GMT
