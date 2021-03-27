@@ -16,8 +16,8 @@ CXXFLAGS += -fpermissive
 LFLAGS += -L$(CRYPTO_LIBRARIES)
 
 # Settings for the apps  
-testOBJS = main.cpp
-testAPP = main
+testOBJS = login.cpp
+testAPP = login
 
 all: main
 

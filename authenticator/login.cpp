@@ -99,7 +99,7 @@ void load_credentials_file()
 
 int main(){
     /* Read in stored credentials */ 
-    load_credentials();
+    load_credentials_file();
 
 
     /* Ask user for credentials */
