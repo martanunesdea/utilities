@@ -7,11 +7,11 @@
 
 class Perceptron {
     public:
-    vector<double> weights;
+    std::vector<double> weights;
     double bias;
+
     Perceptron(int inputs, double bias=1.0);
-    void set_weights(vector<double> w_init);
+    void set_weights(std::vector<double> w_init);
     double sigmoid(double x);
-}
-
-
+    double run(std::vector<double> x);
+};
