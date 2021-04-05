@@ -31,4 +31,4 @@ class MultiLayerPerceptron {
         std::vector<std::vector<Perceptron> > network;
         std::vector<std::vector<double> > values;
         std::vector<std::vector<double> > d;
-}
+};

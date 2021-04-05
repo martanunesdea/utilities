@@ -42,3 +42,40 @@ MultiLayerPerceptron::MultiLayerPerceptron(std::vector<int> layers, double bias,
     }
 }
 
+void MultiLayerPerceptron::set_weights(std::vector<std::vector<std::vector<double> > > w_init) {
+    for ( int i = 0; i < w_init.size(); i++ )
+    {
+        for ( int j = 0; j < w_init[i].size(); j++ )
+        {
+            network[i+1][j].set_weights(w_init[i][j]);
+        }
+    }
+}
+
+void MultiLayerPerceptron::print_weights(){
+    std::cout << "\n\n";
+
+    for ( int i = 1; i < network.size(); i++ )
+    {
+        for ( int j = 0; j < layers[i]; j++ )
+        {
+            std::cout << "Layer " << i+1 << " Neuron " << j << ": ";
+            for (auto &it: network[i][j].weights)
+                std::cout << it << "    ";
+            std::cout << std::endl;
+        }
+
+    }
+    std::cout << std::endl;
+
+}
+
+std::vector<double> MultiLayerPerceptron::run(std::vector<double> x) {
+    values[0] = x;
+
+    for ( int i = 1; i < network.size(); i++ )
+        for ( int j = 0; j < layers[i]; j++ )
+            values[i][j] = network[i][j].run(values[i-1]);
+
+    return values.back();
+}
