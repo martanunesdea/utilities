@@ -1,2 +1,2 @@
-# tricks-and-hacks
-Nifty programs in C++
+# Utilities
+Experiments that may be useful down the road, mostly in C++ or Python
