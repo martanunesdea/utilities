@@ -5,22 +5,47 @@
 #include <stdbool.h>
 #include <math.h>
 
+#define TERM 25
+
 double calculate_repayments(double total, double deposit, double interest, double term)
 {
 
     double mortgage = total - deposit;
 
-    double total_interest_added;
-    double n = 12;
+    double monthly = 12.0;
+    double r = interest / monthly;
+    double N = monthly * term;
 
-    double first_term = 1 + (interest/n);
-    double second_term = n * term;
-    total_interest_added = mortgage *  pow( first_term, second_term );
+    double A = pow((1 + r), N);
+    double monthly_payments = mortgage * r * A / (A - 1);
+    double total_payments = (monthly_payments * N);
 
-    return total_interest_added;
-
+    return total_payments;
 }
 
+void calculate_how_much_left (double total, double deposit, double interest, double term)
+{
+    double mortgage = total - deposit;
+    double monthly = 12.0;
+    double r = interest / monthly;
+    double N = monthly * term;
+
+    double A = pow((1 + r), N);
+    double monthly_payments = mortgage * r * A / (A - 1);
+    double total_payments = (monthly_payments * N);
+    double total_interest = mortgage * (1 + (N*r*A) - A) / (A - 1);
+
+    double mortgage_left [TERM];
+    double paid_yearly = 0;
+    for (int i = 0; i < TERM; i++)
+    {
+        paid_yearly = (monthly_payments * 12) + paid_yearly;
+        mortgage_left [i] = total_payments - paid_yearly;
+        std::cout << "Year" << " " << i << " " << mortgage_left[i] << "\n";
+    }
+
+    return;
+}
 
 int main() {
     double deposit = 0;
@@ -78,4 +103,6 @@ int main() {
 
     double monthly_repayments = calculate_repayments(total_mortgage_value, deposit, interest, term);
     std::cout << "Total mortgage is " << monthly_repayments << std::endl;
+
+    calculate_how_much_left(total_mortgage_value, deposit, interest, term);
 }
